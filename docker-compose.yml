@@ -1,0 +1,74 @@
+#services:
+#  dockerpro-service:
+#    container_name: dockerpro4
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    #    image: asukyi/product-service:1
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/jfs
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: root
+#    ports:
+#      - "8080:3030"
+#    networks:
+#      - amigos
+#  db:
+#    container_name: dockerpro-postgres
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: root
+#      POSTGRES_DB: jfs
+#    ports:
+#      - "5433:5432"
+#    restart: unless-stopped
+#    volumes:
+#      - db:/data/postgres
+#    networks:
+#      - amigos
+#
+#networks:
+#  amigos:
+#    driver: bridge
+#
+#volumes:
+#  db:
+
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: jfs
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5433:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  dockerpro-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: doc
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/jfs
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SERVER_PORT: 3030
+    ports:
+      - "8080:3030"
+
+volumes:
+  db:
