@@ -24,7 +24,7 @@ RUN mvn -B dependency:go-offline
 COPY src ./src
 
 # IMPORTANT: skip tests (no DB during build)
-RUN mvn -B clean package -DskipTests
+RUN mvn -B clean package
 
 # ---------- Stage 2: Run ----------
 FROM eclipse-temurin:23-jre

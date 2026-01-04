@@ -58,6 +58,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: product-service
+#    image: asukyi/dockerpro-service
     depends_on:
       db:
         condition: service_healthy
