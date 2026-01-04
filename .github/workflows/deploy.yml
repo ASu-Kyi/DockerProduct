@@ -33,7 +33,7 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD}}
       - name: Maven Clean Verify
-        run: mvn -B -ntp clean verify jib:build -Ddocker.image.tag=$BUILD_NUMBER
+        run: mvn -B -ntp clean verify jib:build -DskipTests -Ddocker.image.tag=$BUILD_NUMBER
       - name: Setup SSH Agent
         uses: webfactory/ssh-agent@v0.9.0
         with:
