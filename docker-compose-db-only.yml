@@ -1,0 +1,22 @@
+services:
+  db-local-postgres:
+    container_name: jfs-postgres-local
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: jfs
+    ports:
+      - "5333:5432"
+    restart: unless-stopped
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - amigos
+
+networks:
+  amigos:
+    driver: bridge
+
+volumes:
+  db-local:
